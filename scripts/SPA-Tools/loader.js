@@ -1,8 +1,31 @@
 "use strict";
 class HtmlLoader {
-    static loadPickerAnim() {
-    }
-    static loadPickerShow() {
+    static loadPicker() {
+        let htmlTopic = document.getElementById("picked-topic");
+        let htmlPeople = document.getElementById("picked-people");
+        let selectedPeople = (shuffle(DataLoader.loadData("people"))).slice(0, 2);
+        /*
+        Note to self:
+
+        {People blacklist length}
+        {Topic blacklist length}
+
+        {NrOf organisers}
+        */
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            // While there remain elements to shuffle.
+            while (currentIndex != 0) {
+                // Pick a remaining element.
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                // And swap it with the current element.
+                [array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex], array[currentIndex]
+                ];
+            }
+            return array;
+        }
     }
     static loadLists() {
         let lists = {
