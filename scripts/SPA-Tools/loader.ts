@@ -15,6 +15,7 @@ class HtmlLoader {
         }
 
         let urlArgs = (SpaRouter.getUrlArgs() as UrlArgsEditor)
+        let inputs = document.getElementById("inputs")?.children
 
         let inputLabel1 = "Error!";
         let inputLabel2 = "Error!";
@@ -36,7 +37,17 @@ class HtmlLoader {
                     inputPrefill3 = "";
                 }
 
-                (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {DataLoader.}
+                //Creates logic for save button
+                (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
+                    if (inputs) {
+                        DataLoader.addPerson(new person(
+                            (inputs[0].children[1] as HTMLInputElement).value,
+                            (inputs[1].children[1] as HTMLInputElement).value,
+                            (inputs[2].children[1] as HTMLInputElement).value,
+                        ));
+                    }
+                }
+
                 break;
                 
             case "topic":
@@ -50,15 +61,23 @@ class HtmlLoader {
                     inputPrefill3 = "";
                 }
 
-                (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {}
+                //Creates logic for save button
+                (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
+                    if (inputs) {
+                        DataLoader.addTopic(new topic(
+                            (inputs[0].children[1] as HTMLInputElement).value,
+                            (inputs[1].children[1] as HTMLInputElement).value,
+                            (inputs[2].children[1] as HTMLInputElement).value,
+                        ));
+                    }
+                }
+
                 break;
     
             default:
                 break;
         }
     
-        let inputs = document.getElementById("inputs")?.children
-
         if (inputs) {
             //Updates labels 
             inputs[0].children[0].innerHTML = inputLabel1;
@@ -74,11 +93,21 @@ class HtmlLoader {
 }
 
 class DataLoader {
-    static loadData(object:string, id:number) {
-        
+    static addPerson(person:person) {
+        let people = (DataLoader.loadData("people") as person[])
+        if (!people) { people = []}
+        people.push(person)
+        this.saveData("people", people)
     }
 
-    static saveData(object:string) {
-
+    static addTopic(topic:topic) {
+        let topics = (DataLoader.loadData("topics") as topic[])
+        if (!topics) { topics = []}
+        topics.push(topic)
+        this.saveData("topics", topics)
     }
+
+    static saveData  (key:string, object:any) {localStorage.setItem(key, JSON.stringify(object));}
+    static loadData  (key:string)             {return JSON.parse( (localStorage.getItem(key) as string) );}
+    static removeData(key:string)             {localStorage.removeItem(key)}
 }

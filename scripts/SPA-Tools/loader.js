@@ -7,6 +7,7 @@ class HtmlLoader {
     static loadListEditor() {
         var _a;
         let urlArgs = SpaRouter.getUrlArgs();
+        let inputs = (_a = document.getElementById("inputs")) === null || _a === void 0 ? void 0 : _a.children;
         let inputLabel1 = "Error!";
         let inputLabel2 = "Error!";
         let inputLabel3 = "Error!";
@@ -23,7 +24,12 @@ class HtmlLoader {
                     inputPrefill2 = "";
                     inputPrefill3 = "";
                 }
-                document.getElementById("done-button").onclick = () => { DataLoader.; };
+                //Creates logic for save button
+                document.getElementById("done-button").onclick = () => {
+                    if (inputs) {
+                        DataLoader.addPerson(new person(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value));
+                    }
+                };
                 break;
             case "topic":
                 inputLabel1 = "Title";
@@ -34,12 +40,16 @@ class HtmlLoader {
                     inputPrefill2 = "";
                     inputPrefill3 = "";
                 }
-                document.getElementById("done-button").onclick = () => { };
+                //Creates logic for save button
+                document.getElementById("done-button").onclick = () => {
+                    if (inputs) {
+                        DataLoader.addTopic(new topic(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value));
+                    }
+                };
                 break;
             default:
                 break;
         }
-        let inputs = (_a = document.getElementById("inputs")) === null || _a === void 0 ? void 0 : _a.children;
         if (inputs) {
             //Updates labels 
             inputs[0].children[0].innerHTML = inputLabel1;
@@ -53,8 +63,23 @@ class HtmlLoader {
     }
 }
 class DataLoader {
-    static loadData(object, id) {
+    static addPerson(person) {
+        let people = DataLoader.loadData("people");
+        if (!people) {
+            people = [];
+        }
+        people.push(person);
+        this.saveData("people", people);
     }
-    static saveData(object) {
+    static addTopic(topic) {
+        let topics = DataLoader.loadData("topics");
+        if (!topics) {
+            topics = [];
+        }
+        topics.push(topic);
+        this.saveData("topics", topics);
     }
+    static saveData(key, object) { localStorage.setItem(key, JSON.stringify(object)); }
+    static loadData(key) { return JSON.parse(localStorage.getItem(key)); }
+    static removeData(key) { localStorage.removeItem(key); }
 }

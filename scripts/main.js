@@ -1,7 +1,6 @@
 "use strict";
 class person {
-    constructor(id, firstName, lastName, picture) {
-        this.id = id;
+    constructor(firstName, lastName, picture) {
         this.timesPicked = 0;
         this.timesSincePicked = 0;
         this.firstName = firstName;
@@ -10,8 +9,7 @@ class person {
     }
 }
 class topic {
-    constructor(id, title, description, picture) {
-        this.id = id;
+    constructor(title, description, picture) {
         this.timesPicked = 0;
         this.timesSincePicked = 0;
         this.title = title;

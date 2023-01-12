@@ -1,6 +1,4 @@
 class person {
-    id:number
-
     firstName:string
     lastName:string
     pictire:string
@@ -8,8 +6,7 @@ class person {
     timesPicked:number
     timesSincePicked:number
 
-    constructor(id:number, firstName:string, lastName:string, picture:string) {
-        this.id = id;
+    constructor(firstName:string, lastName:string, picture:string) {
         this.timesPicked = 0;
         this.timesSincePicked = 0;
 
@@ -21,8 +18,6 @@ class person {
 }
 
 class topic {
-    id:number
-
     title:string
     description:string
     pictire:string
@@ -30,8 +25,7 @@ class topic {
     timesPicked:number
     timesSincePicked:number
 
-    constructor(id:number, title:string, description:string, picture:string) {
-        this.id = id;
+    constructor(title:string, description:string, picture:string) {
         this.timesPicked = 0;
         this.timesSincePicked = 0;
 
