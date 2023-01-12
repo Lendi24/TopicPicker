@@ -3,7 +3,6 @@ class HtmlLoader {
     static loadPicker() {
     }
     static loadLists() {
-        var _a, _b;
         let lists = {
             people: document.getElementById("peopleList"),
             topics: document.getElementById("topicList"),
@@ -30,8 +29,10 @@ class HtmlLoader {
             });
             return html;
         }
-        (_a = lists.people) === null || _a === void 0 ? void 0 : _a.innerHTML = updatePeople();
-        (_b = lists.topics) === null || _b === void 0 ? void 0 : _b.innerHTML = updateTopics();
+        if (lists.people)
+            lists.people.innerHTML = updatePeople();
+        if (lists.topics)
+            lists.topics.innerHTML = updateTopics();
     }
     static loadListEditor() {
         var _a;

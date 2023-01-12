@@ -30,8 +30,8 @@ class HtmlLoader {
             return html;
         }
 
-        lists.people?.innerHTML = updatePeople();
-        lists.topics?.innerHTML = updateTopics();
+        if (lists.people) lists.people.innerHTML = updatePeople();
+        if (lists.topics) lists.topics.innerHTML = updateTopics();
     }
 
     static loadListEditor() {
