@@ -4,7 +4,34 @@ class HtmlLoader {
     }
 
     static loadLists() {
-        
+
+        let lists = {
+            people  : document.getElementById("peopleList"),
+            topics  : document.getElementById("topicList"),
+        }
+
+        function updatePeople() {
+            let html = "";
+            let people = (DataLoader.loadData("people") as person[]);
+            if (!people) { return "No Users" } //Exits function if data is null
+            people.forEach(elem => {
+                html += `<li>${(elem.firstName)}</li>`;
+            });    
+            return html;
+        }
+
+        function updateTopics() {
+            let html = "";
+            let topics = (DataLoader.loadData("topics") as topic[]);
+            if (!topics) { return "No topics" } //Exits function if data is null
+            topics.forEach(elem => {
+                html += `<li>${(elem.title)}</li>`;
+            });    
+            return html;
+        }
+
+        lists.people?.innerHTML = updatePeople();
+        lists.topics?.innerHTML = updateTopics();
     }
 
     static loadListEditor() {

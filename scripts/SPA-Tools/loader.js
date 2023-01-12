@@ -3,6 +3,35 @@ class HtmlLoader {
     static loadPicker() {
     }
     static loadLists() {
+        var _a, _b;
+        let lists = {
+            people: document.getElementById("peopleList"),
+            topics: document.getElementById("topicList"),
+        };
+        function updatePeople() {
+            let html = "";
+            let people = DataLoader.loadData("people");
+            if (!people) {
+                return "No Users";
+            } //Exits function if data is null
+            people.forEach(elem => {
+                html += `<li>${(elem.firstName)}</li>`;
+            });
+            return html;
+        }
+        function updateTopics() {
+            let html = "";
+            let topics = DataLoader.loadData("topics");
+            if (!topics) {
+                return "No topics";
+            } //Exits function if data is null
+            topics.forEach(elem => {
+                html += `<li>${(elem.title)}</li>`;
+            });
+            return html;
+        }
+        (_a = lists.people) === null || _a === void 0 ? void 0 : _a.innerHTML = updatePeople();
+        (_b = lists.topics) === null || _b === void 0 ? void 0 : _b.innerHTML = updateTopics();
     }
     static loadListEditor() {
         var _a;
