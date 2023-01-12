@@ -17,3 +17,8 @@ Config.SPA = {
         "#/generate": { title: "", html: "/pages/generate.html", func: () => { HtmlLoader.loadPicker(); } },
     }
 };
+Config.GeneratorSettings = {
+    nrOfOrganisers: 2,
+    timeOnBlacklistPerson: 5,
+    timeOnBlacklistTopic: 0,
+};

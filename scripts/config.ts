@@ -18,4 +18,11 @@ class Config {
             "#/generate":        { title: "",       html: "/pages/generate.html", func: ()=>{HtmlLoader.loadPicker()}             },
         }        
     }
+
+    static GeneratorSettings = {
+        nrOfOrganisers : 2,
+
+        timeOnBlacklistPerson : 5,
+        timeOnBlacklistTopic  : 0,
+    }
 }

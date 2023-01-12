@@ -3,6 +3,7 @@ class HtmlLoader {
         let htmlTopic  = document.getElementById("picked-topic");
         let htmlPeople = document.getElementById("picked-people");
 
+
         let selectedPeople = (shuffle(DataLoader.loadData("people"))).slice(0,2);
 
         /*
