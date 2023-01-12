@@ -1,5 +1,9 @@
 class HtmlLoader {
-    static loadPicker() {
+    static loadPickerAnim() {
+        
+    }
+
+    static loadPickerShow() {
         
     }
 
@@ -14,8 +18,17 @@ class HtmlLoader {
             let html = "";
             let people = (DataLoader.loadData("people") as person[]);
             if (!people) { return "No Users" } //Exits function if data is null
+
+            let count = 0;
             people.forEach(elem => {
-                html += `<li>${(elem.firstName)}</li>`;
+                html += 
+                `<li>
+                    <b>${(elem.firstName)}<b>
+                    <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
+                        Edit
+                    </a>
+                </li>`;
+                count++;
             });    
             return html;
         }
@@ -24,9 +37,19 @@ class HtmlLoader {
             let html = "";
             let topics = (DataLoader.loadData("topics") as topic[]);
             if (!topics) { return "No topics" } //Exits function if data is null
+            
+            let count = 0;
             topics.forEach(elem => {
-                html += `<li>${(elem.title)}</li>`;
+                html += 
+                `<li>
+                    <b>${(elem.title)}<b>
+                    <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
+                        Edit
+                    </a>
+                </li>`;
+                count++;
             });    
+
             return html;
         }
 
@@ -59,21 +82,35 @@ class HtmlLoader {
                 inputLabel3 = "Image";    
 
                 if (urlArgs.editMode == true) { // TODO: 'val == true' is bad. Fix this later by updating router to handle types
-                    inputPrefill1 = "edit";
-                    inputPrefill2 = "";
-                    inputPrefill3 = "";
-                }
+                    let data = DataLoader.loadData("people")[urlArgs.editRef]
+                    inputPrefill1 = data.firstName;
+                    inputPrefill2 = data.lastName;
+                    inputPrefill3 = data.pictire;
 
-                //Creates logic for save button
-                (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
-                    if (inputs) {
-                        DataLoader.addPerson(new person(
-                            (inputs[0].children[1] as HTMLInputElement).value,
-                            (inputs[1].children[1] as HTMLInputElement).value,
-                            (inputs[2].children[1] as HTMLInputElement).value,
-                        ));
+                    //Creates logic for save button for editing
+                    (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
+                        if (inputs) {
+                            DataLoader.editObject("people", new person (
+                                (inputs[0].children[1] as HTMLInputElement).value,
+                                (inputs[1].children[1] as HTMLInputElement).value,
+                                (inputs[2].children[1] as HTMLInputElement).value,
+                            ), urlArgs.editRef);    
+                        }
+                    }
+
+                } else {
+                    //Creates logic for save button for adding
+                    (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
+                        if (inputs) {
+                            DataLoader.addPerson(new person (
+                                (inputs[0].children[1] as HTMLInputElement).value,
+                                (inputs[1].children[1] as HTMLInputElement).value,
+                                (inputs[2].children[1] as HTMLInputElement).value,
+                            ));
+                        }
                     }
                 }
+
 
                 break;
                 
@@ -83,19 +120,32 @@ class HtmlLoader {
                 inputLabel3 = "Image";
 
                 if (urlArgs.editMode == true) {
-                    inputPrefill1 = "edit";
-                    inputPrefill2 = "";
-                    inputPrefill3 = "";
-                }
+                    let data = DataLoader.loadData("topics")[urlArgs.editRef]
+                    inputPrefill1 = data.title;
+                    inputPrefill2 = data.description;
+                    inputPrefill3 = data.pictire;
 
-                //Creates logic for save button
-                (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
-                    if (inputs) {
-                        DataLoader.addTopic(new topic(
-                            (inputs[0].children[1] as HTMLInputElement).value,
-                            (inputs[1].children[1] as HTMLInputElement).value,
-                            (inputs[2].children[1] as HTMLInputElement).value,
-                        ));
+                    //Creates logic for save button for editing
+                    (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
+                        if (inputs) {
+                            DataLoader.editObject("topics", new topic (
+                                (inputs[0].children[1] as HTMLInputElement).value,
+                                (inputs[1].children[1] as HTMLInputElement).value,
+                                (inputs[2].children[1] as HTMLInputElement).value,
+                            ), urlArgs.editRef);    
+                        }
+                    }
+
+                } else {
+                    //Creates logic for save button for adding
+                    (document.getElementById("done-button") as HTMLLinkElement).onclick = () => {
+                        if (inputs) {
+                            DataLoader.addTopic(new topic(
+                                (inputs[0].children[1] as HTMLInputElement).value,
+                                (inputs[1].children[1] as HTMLInputElement).value,
+                                (inputs[2].children[1] as HTMLInputElement).value,
+                            ));
+                        }
                     }
                 }
 
@@ -132,6 +182,12 @@ class DataLoader {
         if (!topics) { topics = []}
         topics.push(topic)
         this.saveData("topics", topics)
+    }
+
+    static editObject(key : string, object:object, id:number) {
+        let people = (DataLoader.loadData(key) as object[])
+        people[id] = object;
+        this.saveData(key, people)
     }
 
     static saveData  (key:string, object:any) {localStorage.setItem(key, JSON.stringify(object));}

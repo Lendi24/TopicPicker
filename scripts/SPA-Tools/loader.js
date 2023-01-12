@@ -1,6 +1,8 @@
 "use strict";
 class HtmlLoader {
-    static loadPicker() {
+    static loadPickerAnim() {
+    }
+    static loadPickerShow() {
     }
     static loadLists() {
         let lists = {
@@ -13,8 +15,16 @@ class HtmlLoader {
             if (!people) {
                 return "No Users";
             } //Exits function if data is null
+            let count = 0;
             people.forEach(elem => {
-                html += `<li>${(elem.firstName)}</li>`;
+                html +=
+                    `<li>
+                    <b>${(elem.firstName)}<b>
+                    <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
+                        Edit
+                    </a>
+                </li>`;
+                count++;
             });
             return html;
         }
@@ -24,8 +34,16 @@ class HtmlLoader {
             if (!topics) {
                 return "No topics";
             } //Exits function if data is null
+            let count = 0;
             topics.forEach(elem => {
-                html += `<li>${(elem.title)}</li>`;
+                html +=
+                    `<li>
+                    <b>${(elem.title)}<b>
+                    <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
+                        Edit
+                    </a>
+                </li>`;
+                count++;
             });
             return html;
         }
@@ -50,32 +68,50 @@ class HtmlLoader {
                 inputLabel2 = "Last Name";
                 inputLabel3 = "Image";
                 if (urlArgs.editMode == true) { // TODO: 'val == true' is bad. Fix this later by updating router to handle types
-                    inputPrefill1 = "edit";
-                    inputPrefill2 = "";
-                    inputPrefill3 = "";
+                    let data = DataLoader.loadData("people")[urlArgs.editRef];
+                    inputPrefill1 = data.firstName;
+                    inputPrefill2 = data.lastName;
+                    inputPrefill3 = data.pictire;
+                    //Creates logic for save button for editing
+                    document.getElementById("done-button").onclick = () => {
+                        if (inputs) {
+                            DataLoader.editObject("people", new person(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value), urlArgs.editRef);
+                        }
+                    };
                 }
-                //Creates logic for save button
-                document.getElementById("done-button").onclick = () => {
-                    if (inputs) {
-                        DataLoader.addPerson(new person(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value));
-                    }
-                };
+                else {
+                    //Creates logic for save button for adding
+                    document.getElementById("done-button").onclick = () => {
+                        if (inputs) {
+                            DataLoader.addPerson(new person(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value));
+                        }
+                    };
+                }
                 break;
             case "topic":
                 inputLabel1 = "Title";
                 inputLabel2 = "Description";
                 inputLabel3 = "Image";
                 if (urlArgs.editMode == true) {
-                    inputPrefill1 = "edit";
-                    inputPrefill2 = "";
-                    inputPrefill3 = "";
+                    let data = DataLoader.loadData("topics")[urlArgs.editRef];
+                    inputPrefill1 = data.title;
+                    inputPrefill2 = data.description;
+                    inputPrefill3 = data.pictire;
+                    //Creates logic for save button for editing
+                    document.getElementById("done-button").onclick = () => {
+                        if (inputs) {
+                            DataLoader.editObject("topics", new topic(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value), urlArgs.editRef);
+                        }
+                    };
                 }
-                //Creates logic for save button
-                document.getElementById("done-button").onclick = () => {
-                    if (inputs) {
-                        DataLoader.addTopic(new topic(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value));
-                    }
-                };
+                else {
+                    //Creates logic for save button for adding
+                    document.getElementById("done-button").onclick = () => {
+                        if (inputs) {
+                            DataLoader.addTopic(new topic(inputs[0].children[1].value, inputs[1].children[1].value, inputs[2].children[1].value));
+                        }
+                    };
+                }
                 break;
             default:
                 break;
@@ -108,6 +144,11 @@ class DataLoader {
         }
         topics.push(topic);
         this.saveData("topics", topics);
+    }
+    static editObject(key, object, id) {
+        let people = DataLoader.loadData(key);
+        people[id] = object;
+        this.saveData(key, people);
     }
     static saveData(key, object) { localStorage.setItem(key, JSON.stringify(object)); }
     static loadData(key) { return JSON.parse(localStorage.getItem(key)); }
