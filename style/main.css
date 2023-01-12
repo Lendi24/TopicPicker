@@ -1,0 +1,27 @@
+:root { 
+    /*---------------------------------------
+    ---------------PUBLIC VARS---------------
+    ---------------------------------------*/
+
+    /*Colour*/
+    --site-background-colour: #000000;
+    --site-forground-main-colour: rgb(100, 43, 213);
+    --site-forground-accent-colour: rgb(122, 53, 200);
+
+    /*Shadow*/
+    --shadow-normal: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    --shadow-hover: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+
+    /*Border-radius*/
+    --border-radius-normal: 15px;
+    --border-radius-hover: 20px;
+}
+
+body {
+    background-color: var(--site-background-colour);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    overscroll-behavior-x: none;
+    user-select: none;
+    color: white;
+    margin:0; 
+}
