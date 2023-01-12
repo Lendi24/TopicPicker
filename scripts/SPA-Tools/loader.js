@@ -3,15 +3,18 @@ class HtmlLoader {
     static loadPicker() {
         let htmlTopic = document.getElementById("picked-topic");
         let htmlPeople = document.getElementById("picked-people");
-        let selectedPeople = (shuffle(DataLoader.loadData("people"))).slice(0, 2);
-        /*
-        Note to self:
-
-        {People blacklist length}
-        {Topic blacklist length}
-
-        {NrOf organisers}
-        */
+        let selectedPeople, continueLoop;
+        do {
+            continueLoop = false;
+            selectedPeople = (shuffle(DataLoader.loadData("people"))).slice(0, Config.GeneratorSettings.nrOfOrganisers);
+            for (let i = 0; i < selectedPeople.length; i++) {
+                if (selectedPeople[i].timesSincePicked > Config.GeneratorSettings.timeOnBlacklistPerson) { //cooldown
+                    continueLoop = true;
+                    break;
+                }
+            }
+        } while (continueLoop);
+        console.log(selectedPeople);
         function shuffle(array) {
             let currentIndex = array.length, randomIndex;
             // While there remain elements to shuffle.
