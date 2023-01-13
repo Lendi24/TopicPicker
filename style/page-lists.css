@@ -1,0 +1,35 @@
+#page-lists .content{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#page-lists .list-container {
+    border-radius: 2vh;
+    background-color: var(--site-color4);
+}
+
+#page-lists .list-container ul {
+    overflow-y: scroll;
+
+    border-radius: 2vh;
+    background-color: var(--site-color3);
+
+    height: 65vh;
+    width: 20vw;
+
+    margin: 7px;
+    padding: 2px;
+}
+
+#page-lists .list-container ul li{
+    border-radius: 2vh;
+    background-color: var(--site-color4);
+    margin: 7px;
+    list-style-type: none;
+    display: block;
+}
+
+

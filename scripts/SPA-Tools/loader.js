@@ -50,9 +50,16 @@ class HtmlLoader {
                 html +=
                     `<li>
                     <b>${(elem.firstName)}<b>
+                    <b>${(elem.lastName)}<b> <br>
+                    <i>Times picked: ${(elem.timesPicked)}<i> <br>
+                    <i>Last picked: ${(elem.timesSincePicked)}<i> <br>
                     <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
                         Edit
                     </a>
+                    <a href="">
+                        Delete
+                    </a>
+
                 </li>`;
                 count++;
             });
