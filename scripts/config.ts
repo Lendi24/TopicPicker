@@ -22,7 +22,7 @@ class Config {
     static GeneratorSettings = {
         nrOfOrganisers : 2,
 
-        timeOnBlacklistPerson : 5,
-        timeOnBlacklistTopic  : 0,
+        cooldownForPeople : 5,
+        cooldownForTopics : 0,
     }
 }

@@ -8,7 +8,7 @@ class HtmlLoader {
             continueLoop = false;
             selectedPeople = (shuffle(DataLoader.loadData("people"))).slice(0, Config.GeneratorSettings.nrOfOrganisers);
             for (let i = 0; i < selectedPeople.length; i++) {
-                if (selectedPeople[i].timesSincePicked > Config.GeneratorSettings.timeOnBlacklistPerson) { //cooldown
+                if (selectedPeople[i].timesSincePicked > Config.GeneratorSettings.cooldownForPeople) { //cooldown
                     continueLoop = true;
                     break;
                 }
