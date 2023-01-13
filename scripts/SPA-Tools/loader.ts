@@ -4,9 +4,9 @@ class HtmlLoader {
         let htmlPeople = document.getElementById("picked-people");
         let selectedPeople, selectedPeopleRender, continueLoop, shuffledArray;
 
-        do { 
-            continueLoop = false;
-            selectedPeopleRender = "";
+        do { //Picking selected amount of orginisers and re-picking if selected people are on cooldown
+            continueLoop = false; //TODO: Maybe dont redo the whole list if only on of selected is on cooldown?
+            selectedPeopleRender = "";//  How about having a list for cooldowned people and removing them from the main storage would make things better?
             shuffledArray = shuffle(DataLoader.loadData("people"));
             selectedPeople = ( shuffledArray.array ).slice(0,Config.GeneratorSettings.nrOfOrganisers);
             for (let i = 0; i < selectedPeople.length; i++) { 
