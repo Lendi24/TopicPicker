@@ -3,31 +3,35 @@ class HtmlLoader {
     static loadPicker() {
         let htmlTopic = document.getElementById("picked-topic");
         let htmlPeople = document.getElementById("picked-people");
-        let selectedPeople, continueLoop;
+        let selectedPeople, selectedPeopleRender, continueLoop, shuffledArray;
         do {
             continueLoop = false;
-            selectedPeople = (shuffle(DataLoader.loadData("people"))).slice(0, Config.GeneratorSettings.nrOfOrganisers);
+            selectedPeopleRender = "";
+            shuffledArray = shuffle(DataLoader.loadData("people"));
+            selectedPeople = (shuffledArray.array).slice(0, Config.GeneratorSettings.nrOfOrganisers);
             for (let i = 0; i < selectedPeople.length; i++) {
-                if (selectedPeople[i].timesSincePicked > Config.GeneratorSettings.cooldownForPeople) { //cooldown
+                selectedPeopleRender += `<li>${selectedPeople[i].firstName}</li>`;
+                if (selectedPeople[i].timesSincePicked > Config.GeneratorSettings.cooldownForPeople) {
                     continueLoop = true;
                     break;
                 }
             }
         } while (continueLoop);
+        //htmlPeople?.innerHTML = selectedPeopleRender;
         console.log(selectedPeople);
+        console.log(shuffledArray.oldOrder);
         function shuffle(array) {
-            let currentIndex = array.length, randomIndex;
-            // While there remain elements to shuffle.
+            let oldOrder = new Array, randomIndex, currentIndex = array.length;
+            for (let i = 0; i < array.length; i++) {
+                oldOrder[i] = i;
+            }
             while (currentIndex != 0) {
-                // Pick a remaining element.
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex--;
-                // And swap it with the current element.
-                [array[currentIndex], array[randomIndex]] = [
-                    array[randomIndex], array[currentIndex]
-                ];
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                [oldOrder[currentIndex], oldOrder[randomIndex]] = [oldOrder[randomIndex], oldOrder[currentIndex]];
             }
-            return array;
+            return { array: array, oldOrder: oldOrder };
         }
     }
     static loadLists() {
