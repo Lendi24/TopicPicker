@@ -3,35 +3,42 @@ class HtmlLoader {
     static loadPicker() {
         let htmlTopic = document.getElementById("picked-topic");
         let htmlPeople = document.getElementById("picked-people");
-        let selectedPeople, selectedPeopleRender, continueLoop, shuffledArray;
-        do { //Picking selected amount of orginisers and re-picking if selected people are on cooldown
-            continueLoop = false; //TODO: Maybe dont redo the whole list if only on of selected is on cooldown?
-            selectedPeopleRender = ""; //  How about having a list for cooldowned people and removing them from the main storage would make things better?
-            shuffledArray = shuffle(DataLoader.loadData("people"));
-            selectedPeople = (shuffledArray.array).slice(0, Config.GeneratorSettings.nrOfOrganisers);
-            for (let i = 0; i < selectedPeople.length; i++) {
-                selectedPeopleRender += `<li>
-                                            ${selectedPeople[i].firstName} 
-                                            ${selectedPeople[i].lastName}
-                                            #${shuffledArray.oldOrder[i]}
-                                        </li>`;
-                if (selectedPeople[i].timesSincePicked > Config.GeneratorSettings.cooldownForPeople) {
-                    continueLoop = true;
-                    break;
+        let selectedPeople = new Array, selectedPeopleRender, shuffledArray;
+        selectedPeopleRender = "";
+        shuffledArray = shuffle(DataLoader.loadData("people"));
+        //Picks two random people, respecting cooldown. 
+        for (let i = 0; i < shuffledArray.array.length; i++) { //Loops through a randomized array
+            if (selectedPeople.length < Config.GeneratorSettings.nrOfOrganisers) { //If requested nrOfObjects are found, we continue. 
+                if (shuffledArray.array[i].timesSincePicked > Config.GeneratorSettings.cooldownForPeople) { //Checks if we can pick this element, based on last  time it was picked and cooldown settings
+                    selectedPeople.push(i);
+                }
+                else if (i == shuffledArray.array.length - (Config.GeneratorSettings.cooldownForPeople - selectedPeople.length)) { //If element cant be picked because of cooldown, and we are at the end of our list and have no other choises left, we just pick the last ones
+                    console.warn("Error! Failed to respect cooldown. Picking randomly");
+                    selectedPeople.push(i);
                 }
             }
-        } while (continueLoop);
-        //Updates meta-data for all
-        for (let i = 0; i < shuffledArray.array.length; i++) {
-            shuffledArray.array[i].timesSincePicked++;
-            DataLoader.editObject("people", shuffledArray.array[i], shuffledArray.oldOrder[i]);
+            else {
+                break;
+            }
         }
-        //Updates meta-data for selected
-        for (let i = 0; i < selectedPeople.length; i++) {
-            selectedPeople[i].timesPicked++;
-            selectedPeople[i].timesSincePicked = 0;
-            DataLoader.editObject("people", selectedPeople[i], shuffledArray.oldOrder[i]);
-        } //TODO: There is a way more efficient way of doing this.. Loop through the array once, and edit just the [how many config says] ones as picked
+        //Updates meta-data for users
+        for (let i = 0; i < shuffledArray.array.length; i++) {
+            if (selectedPeople.includes(i)) {
+                selectedPeopleRender += `<li>
+                    ${shuffledArray.array[i].firstName} 
+                    ${shuffledArray.array[i].lastName}
+                    #${shuffledArray.oldOrder[i]}
+                    jk${shuffledArray.array[i].timesSincePicked}
+                </li>`;
+                shuffledArray.array[i].timesPicked++;
+                shuffledArray.array[i].timesSincePicked = 0;
+                DataLoader.editObject("people", shuffledArray.array[i], shuffledArray.oldOrder[i]);
+            }
+            else {
+                shuffledArray.array[i].timesSincePicked++;
+                DataLoader.editObject("people", shuffledArray.array[i], shuffledArray.oldOrder[i]);
+            }
+        }
         htmlPeople === null || htmlPeople === void 0 ? void 0 : htmlPeople.innerHTML = selectedPeopleRender;
         console.log(selectedPeople);
         console.log(shuffledArray.oldOrder);
