@@ -59,10 +59,10 @@ class HtmlLoader {
                     </div><br>
                     <div class = "buttons">
                         <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
-                            Edit
+                            <span class="mdi mdi-pen">   
                         </a>
                         <a href="">
-                            Delete
+                            <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
                 </li>`;

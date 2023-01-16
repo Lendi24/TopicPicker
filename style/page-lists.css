@@ -19,7 +19,7 @@
     border-radius: 2vh;
     background-color: var(--site-color2);
 
-    height: 65vh;
+    height: 60vh;
     width: 30vw;
 
     margin: 10px;
@@ -40,7 +40,7 @@
     box-shadow: 0 2px 5px var(--site-color5);
 
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 

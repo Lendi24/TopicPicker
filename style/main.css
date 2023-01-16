@@ -37,3 +37,28 @@ body {
     height: 100vh;
     width: 100vw;
 }
+
+    /*---------------------------------------
+    -----------------Elements----------------
+    ---------------------------------------*/
+a {
+    color: var(--site-color4);
+    background-color: var(--site-color2);
+    border-color: var(--site-color4);
+    border-width: 5px;
+    border-style: solid;
+    text-decoration: none;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 25px;
+    font-size: 4vh;
+    text-align: center;
+    display: flex;
+    transition: 0.5s;
+}
+
+a:hover {
+    color: var(--site-color2);
+    background-color: var(--site-color4);
+    border-color: var(--site-color2);
+}
