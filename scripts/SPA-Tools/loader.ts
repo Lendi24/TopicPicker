@@ -2,12 +2,45 @@ class HtmlLoader {
     static loadPicker() {
         let htmlTopic  = document.getElementById("picked-topic");
         let htmlPeople = document.getElementById("picked-people");
-        let selectedPeople = new Array, selectedPeopleRender, shuffledArray;
+        //let selectedPeople = new Array, selectedPeopleRender, shuffledArray;
 
-        selectedPeopleRender = "";
-        shuffledArray = shuffle(DataLoader.loadData("people"));
+        let selectedPeopleRender = "", selectedTopicsRender = "";
+        //shuffledArray = shuffle(DataLoader.loadData("people"));
+
+        let people = picker(
+            DataLoader.loadData("people"),
+            Config.GeneratorSettings.cooldownForPeople,
+            Config.GeneratorSettings.nrOfOrganisers,
+        );
+
+        let topics = picker(
+            DataLoader.loadData("topics"),
+            Config.GeneratorSettings.cooldownForTopics, 1,
+        );
+    
+        function picker(objectArray:Array<any>, cooldown:number, requestedCount:number) {
+            let selectedObjects = [], shuffledArray = shuffle(objectArray);
+
+            //Picks two random people, respecting cooldown. 
+            for (let i = 0; i < shuffledArray.array.length; i++) { //Loops through a randomized array
+                if (selectedObjects.length < requestedCount) { //If requested nrOfObjects are found, we continue. 
+                    if ((shuffledArray.array[i]).timesSincePicked > cooldown) { //Checks if we can pick this element, based on last  time it was picked and cooldown settings
+                        selectedObjects.push(i)
+                    } else if (i== shuffledArray.array.length - (cooldown - selectedObjects.length)) { //If element cant be picked because of cooldown, and we are at the end of our list and have no other choises left, we just pick the last ones
+                        console.warn("Error! Failed to respect cooldown. Picking randomly")
+                        selectedObjects.push(i)
+                    }
+                } else { break; }
+            }
+
+            return ({
+                selected : selectedObjects,
+                shuffled : shuffledArray,    
+            })
+        }
 
         //Picks two random people, respecting cooldown. 
+        /*
         for (let i = 0; i < shuffledArray.array.length; i++) { //Loops through a randomized array
             if (selectedPeople.length < Config.GeneratorSettings.nrOfOrganisers) { //If requested nrOfObjects are found, we continue. 
                 if ((shuffledArray.array[i] as person).timesSincePicked > Config.GeneratorSettings.cooldownForPeople) { //Checks if we can pick this element, based on last  time it was picked and cooldown settings
@@ -17,41 +50,66 @@ class HtmlLoader {
                     selectedPeople.push(i)
                 }
             } else { break; }
-        }
+        }*/
 
-        //Updates meta-data for users
-        for (let i = 0; i < shuffledArray.array.length; i++) { 
-            if (selectedPeople.includes(i)) {
+        //Updates meta-data and render for users
+        for (let i = 0; i < people.shuffled.array.length; i++) { 
+            if (people.selected.includes(i)) {
                 selectedPeopleRender += `<li>
-                    ${shuffledArray.array[i].firstName} 
-                    ${shuffledArray.array[i].lastName}
-                    #${shuffledArray.oldOrder[i]}
-                    jk${shuffledArray.array[i].timesSincePicked}
+                    ${people.shuffled.array[i].firstName} 
+                    ${people.shuffled.array[i].lastName}
+                    #${people.shuffled.oldOrder[i]}
+                    timesSincePicked:${people.shuffled.array[i].timesSincePicked}
                 </li>`;
-                (shuffledArray.array[i] as person).timesPicked++;
-                (shuffledArray.array[i] as person).timesSincePicked = 0;
+                (people.shuffled.array[i] as person).timesPicked++;
+                (people.shuffled.array[i] as person).timesSincePicked = 0;
 
                 DataLoader.editObject(
                     "people", 
-                    shuffledArray.array[i],
-                    shuffledArray.oldOrder[i]
+                    people.shuffled.array[i],
+                    people.shuffled.oldOrder[i]
                 );    
             }  else {
-                (shuffledArray.array[i] as person).timesSincePicked++;
+                (people.shuffled.array[i] as person).timesSincePicked++;
                 DataLoader.editObject(
                     "people", 
-                    shuffledArray.array[i],
-                    shuffledArray.oldOrder[i]
+                    people.shuffled.array[i],
+                    people.shuffled.oldOrder[i]
                 );
     
             }
         }
 
+        //Updates meta-data and render for topics
+        for (let i = 0; i < topics.shuffled.array.length; i++) { 
+            if (topics.selected.includes(i)) {
+                selectedTopicsRender += `<li>
+                    ${topics.shuffled.array[i].title} 
+                    ${topics.shuffled.array[i].description}
+                    #${topics.shuffled.oldOrder[i]}
+                    timesSincePicked:${topics.shuffled.array[i].timesSincePicked}
+                </li>`;
+                (topics.shuffled.array[i] as topic).timesPicked++;
+                (topics.shuffled.array[i] as topic).timesSincePicked = 0;
+
+                DataLoader.editObject(
+                    "topics", 
+                    topics.shuffled.array[i],
+                    topics.shuffled.oldOrder[i]
+                );    
+            }  else {
+                (topics.shuffled.array[i] as topic).timesSincePicked++;
+                DataLoader.editObject(
+                    "topics", 
+                    topics.shuffled.array[i],
+                    topics.shuffled.oldOrder[i]
+                );
+            }
+        }
+
+
         htmlPeople?.innerHTML = selectedPeopleRender;
-
-        console.log(selectedPeople);
-        console.log(shuffledArray.oldOrder)
-
+        htmlTopic?.innerHTML = selectedTopicsRender;
 
         //--
         function shuffle(array:Array<any>) {
@@ -67,7 +125,6 @@ class HtmlLoader {
     }
 
     static loadLists() {
-
         let lists = {
             people  : document.getElementById("peopleList"),
             topics  : document.getElementById("topicList"),
@@ -113,10 +170,12 @@ class HtmlLoader {
                 `<li>
                     <div class = "information">
                       <b>${(elem.title)}</b><br>
-                      <i>${(elem.description)}</i><br>
+                      <p>${(elem.description)}</p><br>
+                      <i>Times picked: ${(elem.timesPicked)}</i><br>
+                      <i>Times since picked: ${(elem.timesSincePicked)}</i> 
                     </div><br>
                     <div class = "buttons list-actions">
-                        <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
+                        <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
                         <a href="">

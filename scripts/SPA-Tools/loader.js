@@ -3,45 +3,83 @@ class HtmlLoader {
     static loadPicker() {
         let htmlTopic = document.getElementById("picked-topic");
         let htmlPeople = document.getElementById("picked-people");
-        let selectedPeople = new Array, selectedPeopleRender, shuffledArray;
-        selectedPeopleRender = "";
-        shuffledArray = shuffle(DataLoader.loadData("people"));
-        //Picks two random people, respecting cooldown. 
-        for (let i = 0; i < shuffledArray.array.length; i++) { //Loops through a randomized array
-            if (selectedPeople.length < Config.GeneratorSettings.nrOfOrganisers) { //If requested nrOfObjects are found, we continue. 
-                if (shuffledArray.array[i].timesSincePicked > Config.GeneratorSettings.cooldownForPeople) { //Checks if we can pick this element, based on last  time it was picked and cooldown settings
-                    selectedPeople.push(i);
+        //let selectedPeople = new Array, selectedPeopleRender, shuffledArray;
+        let selectedPeopleRender = "", selectedTopicsRender = "";
+        //shuffledArray = shuffle(DataLoader.loadData("people"));
+        let people = picker(DataLoader.loadData("people"), Config.GeneratorSettings.cooldownForPeople, Config.GeneratorSettings.nrOfOrganisers);
+        let topics = picker(DataLoader.loadData("topics"), Config.GeneratorSettings.cooldownForTopics, 1);
+        function picker(objectArray, cooldown, requestedCount) {
+            let selectedObjects = [], shuffledArray = shuffle(objectArray);
+            //Picks two random people, respecting cooldown. 
+            for (let i = 0; i < shuffledArray.array.length; i++) { //Loops through a randomized array
+                if (selectedObjects.length < requestedCount) { //If requested nrOfObjects are found, we continue. 
+                    if ((shuffledArray.array[i]).timesSincePicked > cooldown) { //Checks if we can pick this element, based on last  time it was picked and cooldown settings
+                        selectedObjects.push(i);
+                    }
+                    else if (i == shuffledArray.array.length - (cooldown - selectedObjects.length)) { //If element cant be picked because of cooldown, and we are at the end of our list and have no other choises left, we just pick the last ones
+                        console.warn("Error! Failed to respect cooldown. Picking randomly");
+                        selectedObjects.push(i);
+                    }
                 }
-                else if (i == shuffledArray.array.length - (Config.GeneratorSettings.cooldownForPeople - selectedPeople.length)) { //If element cant be picked because of cooldown, and we are at the end of our list and have no other choises left, we just pick the last ones
-                    console.warn("Error! Failed to respect cooldown. Picking randomly");
-                    selectedPeople.push(i);
+                else {
+                    break;
                 }
             }
+            return ({
+                selected: selectedObjects,
+                shuffled: shuffledArray,
+            });
+        }
+        //Picks two random people, respecting cooldown. 
+        /*
+        for (let i = 0; i < shuffledArray.array.length; i++) { //Loops through a randomized array
+            if (selectedPeople.length < Config.GeneratorSettings.nrOfOrganisers) { //If requested nrOfObjects are found, we continue.
+                if ((shuffledArray.array[i] as person).timesSincePicked > Config.GeneratorSettings.cooldownForPeople) { //Checks if we can pick this element, based on last  time it was picked and cooldown settings
+                    selectedPeople.push(i)
+                } else if (i== shuffledArray.array.length - (Config.GeneratorSettings.cooldownForPeople - selectedPeople.length)) { //If element cant be picked because of cooldown, and we are at the end of our list and have no other choises left, we just pick the last ones
+                    console.warn("Error! Failed to respect cooldown. Picking randomly")
+                    selectedPeople.push(i)
+                }
+            } else { break; }
+        }*/
+        //Updates meta-data and render for users
+        for (let i = 0; i < people.shuffled.array.length; i++) {
+            if (people.selected.includes(i)) {
+                selectedPeopleRender += `<li>
+                    ${people.shuffled.array[i].firstName} 
+                    ${people.shuffled.array[i].lastName}
+                    #${people.shuffled.oldOrder[i]}
+                    timesSincePicked:${people.shuffled.array[i].timesSincePicked}
+                </li>`;
+                people.shuffled.array[i].timesPicked++;
+                people.shuffled.array[i].timesSincePicked = 0;
+                DataLoader.editObject("people", people.shuffled.array[i], people.shuffled.oldOrder[i]);
+            }
             else {
-                break;
+                people.shuffled.array[i].timesSincePicked++;
+                DataLoader.editObject("people", people.shuffled.array[i], people.shuffled.oldOrder[i]);
             }
         }
-        //Updates meta-data for users
-        for (let i = 0; i < shuffledArray.array.length; i++) {
-            if (selectedPeople.includes(i)) {
-                selectedPeopleRender += `<li>
-                    ${shuffledArray.array[i].firstName} 
-                    ${shuffledArray.array[i].lastName}
-                    #${shuffledArray.oldOrder[i]}
-                    jk${shuffledArray.array[i].timesSincePicked}
+        //Updates meta-data and render for topics
+        for (let i = 0; i < topics.shuffled.array.length; i++) {
+            if (topics.selected.includes(i)) {
+                selectedTopicsRender += `<li>
+                    ${topics.shuffled.array[i].title} 
+                    ${topics.shuffled.array[i].description}
+                    #${topics.shuffled.oldOrder[i]}
+                    timesSincePicked:${topics.shuffled.array[i].timesSincePicked}
                 </li>`;
-                shuffledArray.array[i].timesPicked++;
-                shuffledArray.array[i].timesSincePicked = 0;
-                DataLoader.editObject("people", shuffledArray.array[i], shuffledArray.oldOrder[i]);
+                topics.shuffled.array[i].timesPicked++;
+                topics.shuffled.array[i].timesSincePicked = 0;
+                DataLoader.editObject("topics", topics.shuffled.array[i], topics.shuffled.oldOrder[i]);
             }
             else {
-                shuffledArray.array[i].timesSincePicked++;
-                DataLoader.editObject("people", shuffledArray.array[i], shuffledArray.oldOrder[i]);
+                topics.shuffled.array[i].timesSincePicked++;
+                DataLoader.editObject("topics", topics.shuffled.array[i], topics.shuffled.oldOrder[i]);
             }
         }
         htmlPeople === null || htmlPeople === void 0 ? void 0 : htmlPeople.innerHTML = selectedPeopleRender;
-        console.log(selectedPeople);
-        console.log(shuffledArray.oldOrder);
+        htmlTopic === null || htmlTopic === void 0 ? void 0 : htmlTopic.innerHTML = selectedTopicsRender;
         //--
         function shuffle(array) {
             let oldOrder = new Array, randomIndex, currentIndex = array.length;
@@ -103,10 +141,12 @@ class HtmlLoader {
                     `<li>
                     <div class = "information">
                       <b>${(elem.title)}</b><br>
-                      <i>${(elem.description)}</i><br>
+                      <p>${(elem.description)}</p><br>
+                      <i>Times picked: ${(elem.timesPicked)}</i><br>
+                      <i>Times since picked: ${(elem.timesSincePicked)}</i> 
                     </div><br>
                     <div class = "buttons list-actions">
-                        <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
+                        <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
                         <a href="">
