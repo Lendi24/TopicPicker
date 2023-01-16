@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "mdi": "^2.2.43"
+    "mdi": "^2.2.43",
+    "typescript": "^4.9.4"
   }
 }

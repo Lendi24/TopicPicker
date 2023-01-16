@@ -10,16 +10,32 @@ class HtmlLoader {
             shuffledArray = shuffle(DataLoader.loadData("people"));
             selectedPeople = (shuffledArray.array).slice(0, Config.GeneratorSettings.nrOfOrganisers);
             for (let i = 0; i < selectedPeople.length; i++) {
-                selectedPeopleRender += `<li>${selectedPeople[i].firstName}</li>`;
+                selectedPeopleRender += `<li>
+                                            ${selectedPeople[i].firstName} 
+                                            ${selectedPeople[i].lastName}
+                                            #${shuffledArray.oldOrder[i]}
+                                        </li>`;
                 if (selectedPeople[i].timesSincePicked > Config.GeneratorSettings.cooldownForPeople) {
                     continueLoop = true;
                     break;
                 }
             }
         } while (continueLoop);
-        //htmlPeople?.innerHTML = selectedPeopleRender;
+        //Updates meta-data for all
+        for (let i = 0; i < shuffledArray.array.length; i++) {
+            shuffledArray.array[i].timesSincePicked++;
+            DataLoader.editObject("people", shuffledArray.array[i], shuffledArray.oldOrder[i]);
+        }
+        //Updates meta-data for selected
+        for (let i = 0; i < selectedPeople.length; i++) {
+            selectedPeople[i].timesPicked++;
+            selectedPeople[i].timesSincePicked = 0;
+            DataLoader.editObject("people", selectedPeople[i], shuffledArray.oldOrder[i]);
+        } //TODO: There is a way more efficient way of doing this.. Loop through the array once, and edit just the [how many config says] ones as picked
+        htmlPeople === null || htmlPeople === void 0 ? void 0 : htmlPeople.innerHTML = selectedPeopleRender;
         console.log(selectedPeople);
         console.log(shuffledArray.oldOrder);
+        //--
         function shuffle(array) {
             let oldOrder = new Array, randomIndex, currentIndex = array.length;
             for (let i = 0; i < array.length; i++) {
@@ -53,14 +69,14 @@ class HtmlLoader {
                       <b>${(elem.firstName)}</b>
                       <b>${(elem.lastName)}</b><br>
                       <i>Times picked: ${(elem.timesPicked)}</i><br>
-                      <i>Last picked: ${(elem.timesSincePicked)}</i> 
+                      <i>Times since picked: ${(elem.timesSincePicked)}</i> 
                     </div><br>
-                    <div class = "buttons">
+                    <div class = "buttons list-actions">
                         <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
-                            Edit
+                            <span class="mdi mdi-pen">   
                         </a>
                         <a href="">
-                            Delete
+                            <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
                 </li>`;
@@ -78,10 +94,18 @@ class HtmlLoader {
             topics.forEach(elem => {
                 html +=
                     `<li>
-                    <b>${(elem.title)}<b>
-                    <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
-                        Edit
-                    </a>
+                    <div class = "information">
+                      <b>${(elem.title)}</b><br>
+                      <i>${(elem.description)}</i><br>
+                    </div><br>
+                    <div class = "buttons list-actions">
+                        <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
+                            <span class="mdi mdi-pen">   
+                        </a>
+                        <a href="">
+                            <span class="mdi mdi-trash-can">   
+                        </a>
+                    </div>
                 </li>`;
                 count++;
             });

@@ -1,9 +1,11 @@
 <div id="page-lists">
+    <!--
     <div class="title">
         <h1>Lists and Storage</h1>
         <b>Here you can add, remove and edit people or topics</b><br>
         <b>Everything is saved localy, so don't be afraid to reload</b>
     </div>
+    -->
     <div class="content">
         <div class="list-container">
             <h2>People:</h2>
@@ -13,8 +15,10 @@
                 <li><b>Well this is akward.                 </b><button>edit</button></li>
                 <li><b>Make sure js is enabled!             </b><button>edit</button></li>
             </ul>
-            <a href="#/editor/item--editType.person--editMode.0">Add</a>
-            <a href="" onclick="DataLoader.removeData('people')">Reset</a>
+            <div class="list-actions">
+                <a href="#/editor/item--editType.person--editMode.0">Add</a>
+                <a href="" onclick="DataLoader.removeData('people')">Reset</a>
+            </div>
         </div>
     
         <div class="list-container">
@@ -25,8 +29,10 @@
                 <li><b>Well this is akward.                 </b><button>edit</button></li>
                 <li><b>Make sure js is enabled!             </b><button>edit</button></li>
             </ul>
-            <a href="#/editor/item--editType.topic--editMode.0">Add</a>
-            <a href="" onclick="DataLoader.removeData('topics')">Reset</a>
+            <div class="list-actions">
+                <a href="#/editor/item--editType.topic--editMode.0">Add</a>
+                <a href="" onclick="DataLoader.removeData('topics')">Reset</a>    
+            </div>
         </div>    
     </div>
 </div>
