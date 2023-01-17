@@ -14,8 +14,9 @@ class Config {
             
             "#/editor":          { title: "",       html: "/pages/lists.html",    func: ()=>{HtmlLoader.loadLists()     }             },
             "#/editor/item":     { title: "",       html: "/pages/editor.html",   func: ()=>{HtmlLoader.loadListEditor()}             },
+            "#/editor/item/del": { title: "",       html: "/pages/remover.html",  func: ()=>{HtmlLoader.loadItemRemover()}            },
 
-            "#/generate":        { title: "",       html: "/pages/generate.html", func: ()=>{HtmlLoader.loadPicker()}             },
+            "#/generate":        { title: "",       html: "/pages/generate.html", func: ()=>{HtmlLoader.loadPicker()}                 },
         }        
     }
 

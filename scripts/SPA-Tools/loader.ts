@@ -149,7 +149,7 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="">
+                        <a href="#/editor/item/del--remType.person--remConfirmed.1--remRef.${count}">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -178,7 +178,7 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="">
+                        <a href="#/editor/item/del--remType.topic--remConfirmed.1--remRef.${count}">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -194,10 +194,32 @@ class HtmlLoader {
         if (lists.topics) lists.topics.innerHTML = updateTopics();
     }
 
+    static loadItemRemover() {
+        interface UrlArgsEditor{
+            remConfirmed    : number;
+            remType         : string;
+            remRef          : number;
+        }
+
+        let urlArgs = (SpaRouter.getUrlArgs() as UrlArgsEditor)
+
+        if (urlArgs.remConfirmed == 1) {
+            let data = (DataLoader.loadData(urlArgs.remType)).
+            data.splice(urlArgs.remRef, 1)
+            DataLoader.saveData(urlArgs.remType, data);
+        } else {
+            let html = 
+                `<div>
+            
+                </div>`;
+            document.getElementById("confirm-text")?.innerHTML = html;
+        }
+    }
+
     static loadListEditor() {
         interface UrlArgsEditor{
             editType : string;
-            editMode : boolean;
+            editMode : number;
             editRef  : number;
         }
 
@@ -218,7 +240,7 @@ class HtmlLoader {
                 inputLabel2 = "Last Name";
                 inputLabel3 = "Image";    
 
-                if (urlArgs.editMode == true) { // TODO: 'val == true' is bad. Fix this later by updating router to handle types
+                if (urlArgs.editMode == 1) { // TODO: 'val == true' is bad. Fix this later by updating router to handle types
                     let data = DataLoader.loadData("people")[urlArgs.editRef]
                     inputPrefill1 = data.firstName;
                     inputPrefill2 = data.lastName;
@@ -256,7 +278,7 @@ class HtmlLoader {
                 inputLabel2 = "Description";
                 inputLabel3 = "Image";
 
-                if (urlArgs.editMode == true) {
+                if (urlArgs.editMode == 1) {
                     let data = DataLoader.loadData("topics")[urlArgs.editRef]
                     inputPrefill1 = data.title;
                     inputPrefill2 = data.description;
