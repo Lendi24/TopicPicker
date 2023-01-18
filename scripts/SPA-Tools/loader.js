@@ -78,8 +78,8 @@ class HtmlLoader {
                 DataLoader.editObject("topics", topics.shuffled.array[i], topics.shuffled.oldOrder[i]);
             }
         }
-        htmlPeople === null || htmlPeople === void 0 ? void 0 : htmlPeople.innerHTML = selectedPeopleRender;
-        htmlTopic === null || htmlTopic === void 0 ? void 0 : htmlTopic.innerHTML = selectedTopicsRender;
+        htmlPeople.innerHTML = selectedPeopleRender;
+        htmlTopic.innerHTML = selectedTopicsRender;
         //--
         function shuffle(array) {
             let oldOrder = new Array, randomIndex, currentIndex = array.length;
@@ -120,7 +120,11 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="#/editor/item/del--remType.person--remConfirmed.1--remRef.${count}">
+                        <a href="#/editor/" onclick="loadItemRemover(
+                                let data = (DataLoader.loadData(people));
+                                data.splice(${count}, 1)
+                                DataLoader.saveData(people, data);
+                            );">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -149,7 +153,11 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="#/editor/item/del--remType.topic--remConfirmed.1--remRef.${count}">
+                        <a href="#/editor/" onclick="loadItemRemover(
+                                let data = (DataLoader.loadData(topics));
+                                data.splice(${count}, 1)
+                                DataLoader.saveData(topics, data);
+                            );">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -163,21 +171,30 @@ class HtmlLoader {
         if (lists.topics)
             lists.topics.innerHTML = updateTopics();
     }
+    /*
     static loadItemRemover() {
-        var _a;
-        let urlArgs = SpaRouter.getUrlArgs();
+        interface UrlArgsEditor{
+            remConfirmed    : number;
+            remType         : string;
+            remRef          : number;
+        }
+
+        let urlArgs = (SpaRouter.getUrlArgs() as UrlArgsEditor)
+
         if (urlArgs.remConfirmed == 1) {
-            let data = (DataLoader.loadData(urlArgs.remType)).
-                data.splice(urlArgs.remRef, 1);
+            let data = (DataLoader.loadData(urlArgs.remType));
+            data.splice(urlArgs.remRef, 1)
+            console.log(data);
             DataLoader.saveData(urlArgs.remType, data);
-        }
-        else {
-            let html = `<div>
-            
+        } else {
+            let html =
+                `<div>
+                    Type: ${urlArgs.remType}
+                    Objk: ${console.log(DataLoader.loadData(urlArgs.remType)[urlArgs.remRef])}
                 </div>`;
-            (_a = document.getElementById("confirm-text")) === null || _a === void 0 ? void 0 : _a.innerHTML = html;
+            document.getElementById("confirm-text")!.innerHTML = html;
         }
-    }
+    }*/
     static loadListEditor() {
         var _a;
         let urlArgs = SpaRouter.getUrlArgs();
