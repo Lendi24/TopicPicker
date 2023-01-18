@@ -194,33 +194,6 @@ class HtmlLoader {
         if (lists.topics) lists.topics.innerHTML = updateTopics();
     }
 
-    
-
-    /*
-    static loadItemRemover() {
-        interface UrlArgsEditor{
-            remConfirmed    : number;
-            remType         : string;
-            remRef          : number;
-        }
-
-        let urlArgs = (SpaRouter.getUrlArgs() as UrlArgsEditor)
-
-        if (urlArgs.remConfirmed == 1) {
-            let data = (DataLoader.loadData(urlArgs.remType));
-            data.splice(urlArgs.remRef, 1)
-            console.log(data);
-            DataLoader.saveData(urlArgs.remType, data);
-        } else {
-            let html = 
-                `<div>
-                    Type: ${urlArgs.remType}
-                    Objk: ${console.log(DataLoader.loadData(urlArgs.remType)[urlArgs.remRef])}
-                </div>`;
-            document.getElementById("confirm-text")!.innerHTML = html;
-        }
-    }*/
-
     static loadListEditor() {
         interface UrlArgsEditor{
             editType : string;
