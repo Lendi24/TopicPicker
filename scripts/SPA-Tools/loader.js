@@ -120,11 +120,7 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="#/editor/" onclick="loadItemRemover(
-                                let data = (DataLoader.loadData(people));
-                                data.splice(${count}, 1)
-                                DataLoader.saveData(people, data);
-                            );">
+                        <a href="#/editor/" onclick="DataLoader.removeObject('people',${count})">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -153,11 +149,7 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="#/editor/" onclick="loadItemRemover(
-                                let data = (DataLoader.loadData(topics));
-                                data.splice(${count}, 1)
-                                DataLoader.saveData(topics, data);
-                            );">
+                        <a href="#/editor/" onclick="DataLoader.removeObject('topics',${count})">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -287,6 +279,16 @@ class DataLoader {
         }
         topics.push(topic);
         this.saveData("topics", topics);
+    }
+    static removeObject(key, id) {
+        let data = (DataLoader.loadData(key));
+        if (data.length <= 1) {
+            DataLoader.removeData(key);
+        }
+        else {
+            data.splice(id, 1);
+            DataLoader.saveData(key, data);
+        }
     }
     static editObject(key, object, id) {
         let people = DataLoader.loadData(key);

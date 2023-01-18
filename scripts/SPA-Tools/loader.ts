@@ -149,11 +149,7 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.person--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="#/editor/" onclick="loadItemRemover(
-                                let data = (DataLoader.loadData(people));
-                                data.splice(${count}, 1)
-                                DataLoader.saveData(people, data);
-                            );">
+                        <a href="#/editor/" onclick="DataLoader.removeObject('people',${count})">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -182,11 +178,7 @@ class HtmlLoader {
                         <a href="#/editor/item--editType.topic--editMode.1--editRef.${count}">
                             <span class="mdi mdi-pen">   
                         </a>
-                        <a href="#/editor/" onclick="loadItemRemover(
-                                let data = (DataLoader.loadData(topics));
-                                data.splice(${count}, 1)
-                                DataLoader.saveData(topics, data);
-                            );">
+                        <a href="#/editor/" onclick="DataLoader.removeObject('topics',${count})">
                             <span class="mdi mdi-trash-can">   
                         </a>
                     </div>
@@ -201,6 +193,8 @@ class HtmlLoader {
         if (lists.people) lists.people.innerHTML = updatePeople();
         if (lists.topics) lists.topics.innerHTML = updateTopics();
     }
+
+    
 
     /*
     static loadItemRemover() {
@@ -352,6 +346,16 @@ class DataLoader {
         if (!topics) { topics = []}
         topics.push(topic)
         this.saveData("topics", topics)
+    }
+
+    static removeObject(key : string, id : number) {
+        let data = (DataLoader.loadData(key));
+        if (data.length <= 1) {
+            DataLoader.removeData(key);
+        } else {
+            data.splice(id, 1)
+            DataLoader.saveData(key, data);    
+        }
     }
 
     static editObject(key : string, object:object, id:number) {
