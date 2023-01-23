@@ -2,6 +2,8 @@ class HtmlLoader {
     static loadPicker()     {PagePicker.load()}
     static loadLists()      { PageLists.load()}
     static loadListEditor() {PageEditor.load()}
+    static loadConfig()     {PageConfig.load()}
+
 }
 
 class DataLoader {

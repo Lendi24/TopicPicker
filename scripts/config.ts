@@ -16,6 +16,8 @@ class Config {
             "#/editor/item":     { title: "",       html: "/pages/editor.html",   func: ()=>{HtmlLoader.loadListEditor()}             },
 
             "#/generate":        { title: "",       html: "/pages/generate.html", func: ()=>{HtmlLoader.loadPicker()}                 },
+            
+            "#/config":          { title: "",       html: "/pages/config.html",   func: ()=>{HtmlLoader.loadConfig()}                 },
         }        
     }
 
