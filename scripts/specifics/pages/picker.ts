@@ -4,10 +4,15 @@ class PagePicker {
 
         //Picks two random people, respecting cooldown. 
         for (let i = 0; i < shuffledArray.array.length; i++) { //Loops through a randomized array
+            //console.log(objectArray)
+            //console.log(selectedObjects)
+            console.log("i:"+i)
+            console.log("selected:"+selectedObjects.length)
+
             if (selectedObjects.length < requestedCount) { //If requested nrOfObjects are found, we continue. 
                 if ((shuffledArray.array[i]).timesSincePicked > cooldown) { //Checks if we can pick this element, based on last  time it was picked and cooldown settings
                     selectedObjects.push(i)
-                } else if (i== shuffledArray.array.length - (cooldown - selectedObjects.length)) { //If element cant be picked because of cooldown, and we are at the end of our list and have no other choises left, we just pick the last ones
+                } else if (i <= shuffledArray.array.length - (/*cooldown - */selectedObjects.length)) { //If element cant be picked because of cooldown, and we are at the end of our list and have no other choises left, we just pick the last ones
                     console.warn("Error! Failed to respect cooldown. Picking randomly")
                     selectedObjects.push(i)
                 }
